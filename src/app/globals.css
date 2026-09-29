@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Centralized Color Tokens for Modern SaaS */
+  --color-primary: #0f172a; /* Soft dark */
+  --color-primary-hover: #1e293b;
+  --color-primary-light: #f1f5f9;
+  
+  --color-secondary: #334155;
+  --color-secondary-hover: #475569;
+  
+  --color-background: #f8fafc; /* Very soft gray */
+  --color-surface: #ffffff;
+  
+  --color-foreground: #0f172a; /* Dark text */
+  --color-muted: #64748b; /* Soft gray text */
+  
+  --color-border: #e2e8f0;
+  
+  --color-success: #10b981;
+  --color-success-bg: #d1fae5;
+  --color-success-text: #047857;
+
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fef3c7;
+  --color-warning-text: #b45309;
+
+  --color-danger: #ef4444;
+  --color-danger-bg: #fee2e2;
+  --color-danger-text: #b91c1c;
+
+  --color-info: #3b82f6;
+  --color-info-bg: #dbeafe;
+  --color-info-text: #1d4ed8;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-dropdown: 0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  line-height: 1.5;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Base Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--color-foreground);
+  line-height: 1.2;
+}
+
+.text-page-title {
+  font-size: 1.875rem; /* 30px */
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
+}
+
+.text-section-title {
+  font-size: 1.25rem; /* 20px */
+  margin-bottom: 1rem;
+}
+
+.text-card-title {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 500;
+}
+
+.text-body {
+  font-size: 0.875rem; /* 14px */
+  color: var(--color-foreground);
+}
+
+.text-description {
+  font-size: 0.875rem; /* 14px */
+  color: var(--color-muted);
+}
+
+.text-caption {
+  font-size: 0.75rem; /* 12px */
+  color: var(--color-muted);
+}
+
+/* Common Layout Utils */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-lg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
