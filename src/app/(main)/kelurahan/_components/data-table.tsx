@@ -1,0 +1,112 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import { Plus, Eye, Trash, RefreshCw } from "lucide-react";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import ModalCreate from "./modal-create";
+import ModalDetail from "./modal-detail";
+import { Kelurahan, fetchKelurahan, deleteKelurahan } from "@/lib/api/kelurahan-api";
+
+export default function DataTable() {
+  const [data, setData] = useState<Kelurahan[]>([]);
+  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [selected, setSelected] = useState<Kelurahan | null>(null);
+
+  const loadData = async () => {
+    setIsLoading(true);
+    const result = await fetchKelurahan();
+    setData(Array.isArray(result) ? result : []);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+      await deleteKelurahan(id);
+      loadData();
+    }
+  };
+
+  const filteredData = data.filter((row: any) => {
+    return Object.entries(filters).every(([key, value]) => {
+      if (!value) return true;
+      const rowVal = row[key]?.toString().toLowerCase() || "";
+      return rowVal.includes(value.toLowerCase());
+    });
+  });
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-end items-center mb-2">
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={loadData} isLoading={isLoading}>
+            <RefreshCw size={16} />
+          </Button>
+          <Button onClick={() => setIsCreateOpen(true)}>
+            <Plus size={16} className="mr-2" style={{ marginRight: "8px" }}/> Tambah
+          </Button>
+        </div>
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>id</TableHead>
+            <TableHead>code</TableHead>
+            <TableHead>name</TableHead>
+            <TableHead>postalCode</TableHead>
+            <TableHead>Aksi</TableHead>
+          </TableRow>
+          <TableRow>
+            <TableHead><Input placeholder="Filter id..." style={{ height: '32px', fontSize: '12px' }} value={filters['id'] || ''} onChange={(e) => setFilters({...filters, 'id': e.target.value})} /></TableHead>
+            <TableHead><Input placeholder="Filter code..." style={{ height: '32px', fontSize: '12px' }} value={filters['code'] || ''} onChange={(e) => setFilters({...filters, 'code': e.target.value})} /></TableHead>
+            <TableHead><Input placeholder="Filter name..." style={{ height: '32px', fontSize: '12px' }} value={filters['name'] || ''} onChange={(e) => setFilters({...filters, 'name': e.target.value})} /></TableHead>
+            <TableHead><Input placeholder="Filter postalCode..." style={{ height: '32px', fontSize: '12px' }} value={filters['postalCode'] || ''} onChange={(e) => setFilters({...filters, 'postalCode': e.target.value})} /></TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {isLoading ? (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center" style={{ textAlign: "center", padding: "2rem" }}>
+                Loading data...
+              </TableCell>
+            </TableRow>
+          ) : filteredData.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center" style={{ textAlign: "center", padding: "2rem" }}>
+                Data tidak ditemukan.
+              </TableCell>
+            </TableRow>
+          ) : (
+            filteredData.map((row: any, i: number) => (
+              <TableRow key={i}>
+                <TableCell>{row.id?.toString() || '-'}</TableCell>
+                <TableCell>{row.code?.toString() || '-'}</TableCell>
+                <TableCell>{row.name?.toString() || '-'}</TableCell>
+                <TableCell>{row.postalCode?.toString() || '-'}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => setSelected(row)}>
+                      <Eye size={16} />
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => handleDelete(row.id as string)}>
+                      <Trash size={16} className="text-danger" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+      <ModalCreate isOpen={isCreateOpen} onClose={() => { setIsCreateOpen(false); loadData(); }} />
+      {selected && <ModalDetail isOpen={!!selected} onClose={() => setSelected(null)} data={selected} />}
+    </div>
+  );
+}

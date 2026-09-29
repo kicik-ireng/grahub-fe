@@ -7,10 +7,10 @@ import { Badge } from '@/components/ui/badge';
 interface ModalDetailProps {
   isOpen: boolean;
   onClose: () => void;
-  resident: Resident;
+  data: Resident;
 }
 
-export default function ModalDetail({ isOpen, onClose, resident }: ModalDetailProps) {
+export default function ModalDetail({ isOpen, onClose, data }: ModalDetailProps) {
   return (
     <Dialog 
       isOpen={isOpen} 
@@ -26,19 +26,19 @@ export default function ModalDetail({ isOpen, onClose, resident }: ModalDetailPr
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
             <div>
               <div className="text-caption">NIK</div>
-              <div className="text-body font-medium">{resident.nik}</div>
+              <div className="text-body font-medium">{data.nik}</div>
             </div>
             <div>
-              <div className="text-caption">Nama</div>
-              <div className="text-body font-medium">{resident.name}</div>
+              <div className="text-caption">Nama Lengkap</div>
+              <div className="text-body font-medium">{data.fullName}</div>
             </div>
             <div>
               <div className="text-caption">Gender</div>
-              <div className="text-body font-medium">{resident.gender === 'MALE' ? 'Laki-laki' : 'Perempuan'}</div>
+              <div className="text-body font-medium">{(data as any).gender === 'MALE' ? 'Laki-laki' : ((data as any).gender === 'FEMALE' ? 'Perempuan' : (data as any).gender || '-')}</div>
             </div>
             <div>
               <div className="text-caption">Status</div>
-              <div><Badge variant={resident.status === 'ACTIVE' ? 'success' : 'default'}>{resident.status}</Badge></div>
+              <div><Badge variant={(data as any).status === 'ACTIVE' ? 'success' : 'default'}>{(data as any).status || '-'}</Badge></div>
             </div>
           </div>
         </div>
@@ -48,11 +48,11 @@ export default function ModalDetail({ isOpen, onClose, resident }: ModalDetailPr
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
             <div>
               <div className="text-caption">RT / RW</div>
-              <div className="text-body font-medium">{resident.rt} / {resident.rw}</div>
+              <div className="text-body font-medium">{data.rtId} / {data.rwId}</div>
             </div>
             <div>
               <div className="text-caption">No. HP</div>
-              <div className="text-body font-medium">{resident.phone || '-'}</div>
+              <div className="text-body font-medium">{data.phone || '-'}</div>
             </div>
           </div>
         </div>

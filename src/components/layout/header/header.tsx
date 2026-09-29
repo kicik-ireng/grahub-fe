@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu, Search, Bell, User } from 'lucide-react';
 import styles from './header.module.css';
+import { apiClient } from '@/lib/api/client';
 
 interface HeaderProps {
   className?: string;
@@ -8,6 +9,26 @@ interface HeaderProps {
 }
 
 export default function Header({ className, onToggleSidebar }: HeaderProps) {
+  const [profile, setProfile] = useState<{ email?: string, role?: string }>({ email: 'Loading...', role: '' });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await apiClient.get('/auth/me');
+        if (res.data) {
+          setProfile({
+            email: res.data.email || 'User',
+            role: res.data.roles ? res.data.roles.join(', ') : 'Warga'
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load profile', err);
+        setProfile({ email: 'Warga', role: 'Guest' });
+      }
+    };
+    fetchProfile();
+  }, []);
+
   return (
     <header className={`${styles.header} ${className || ''}`}>
       <div className={styles.left}>
@@ -33,8 +54,8 @@ export default function Header({ className, onToggleSidebar }: HeaderProps) {
             <User size={18} />
           </div>
           <div className={styles.profileInfo}>
-            <span className={styles.name}>Admin RW</span>
-            <span className={styles.role}>Administrator</span>
+            <span className={styles.name}>{profile.email}</span>
+            <span className={styles.role}>{profile.role}</span>
           </div>
         </div>
       </div>

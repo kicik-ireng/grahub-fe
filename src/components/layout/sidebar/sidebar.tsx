@@ -41,9 +41,7 @@ const MENU_ITEMS = [
   ]},
   { group: 'System', items: [
     { label: 'Notifications', href: '/notifications', icon: Bell },
-    { label: 'Reports', href: '/reports', icon: BarChart2 },
     { label: 'Users', href: '/users', icon: Shield },
-    { label: 'Settings', href: '/settings', icon: Settings },
   ]}
 ];
 

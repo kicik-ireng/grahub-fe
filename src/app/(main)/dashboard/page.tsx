@@ -1,13 +1,44 @@
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import { Users, UserPlus, DollarSign, Activity } from 'lucide-react';
 import styles from './dashboard.module.css';
+import { fetchResidents } from '@/lib/api/residents-api';
+import { fetchFamilies } from '@/lib/api/families-api';
+import { fetchComplaints } from '@/lib/api/complaints-api';
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState({ residents: 0, families: 0, complaints: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadStats = async () => {
+      setIsLoading(true);
+      try {
+        const [res, fam, comp] = await Promise.all([
+          fetchResidents().catch(() => []),
+          fetchFamilies().catch(() => []),
+          fetchComplaints().catch(() => []),
+        ]);
+        
+        setStats({
+          residents: Array.isArray(res) ? res.length : 0,
+          families: Array.isArray(fam) ? fam.length : 0,
+          complaints: Array.isArray(comp) ? (comp as any[]).filter((c: any) => c.status === 'PENDING').length : 0,
+        });
+      } catch (err) {
+        console.error("Error loading dashboard stats", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadStats();
+  }, []);
+
   const kpis = [
-    { title: 'Total Warga', value: '1,240', icon: Users, trend: '+5% dari bulan lalu' },
-    { title: 'Keluarga', value: '380', icon: UserPlus, trend: '+2 keluarga baru' },
-    { title: 'Kas RT', value: 'Rp 15.400.000', icon: DollarSign, trend: '+Rp 2.000.000 bulan ini' },
-    { title: 'Aduan Aktif', value: '4', icon: Activity, trend: '2 butuh verifikasi' },
+    { title: 'Total Warga', value: isLoading ? '...' : stats.residents.toString(), icon: Users, trend: 'Total penduduk terdaftar' },
+    { title: 'Keluarga', value: isLoading ? '...' : stats.families.toString(), icon: UserPlus, trend: 'Total kartu keluarga' },
+    { title: 'Kas RT', value: 'Lihat Keuangan', icon: DollarSign, trend: 'Modul transaksi' },
+    { title: 'Aduan Pending', value: isLoading ? '...' : stats.complaints.toString(), icon: Activity, trend: 'Butuh tindak lanjut' },
   ];
 
   return (

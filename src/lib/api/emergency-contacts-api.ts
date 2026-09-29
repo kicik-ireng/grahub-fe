@@ -1,3 +1,5 @@
+import { apiClient } from './client';
+
 export interface EmergencyContact {
   id: string;
   name: string;
@@ -8,5 +10,25 @@ export interface EmergencyContact {
 }
 
 export const fetchEmergencyContacts = async (): Promise<EmergencyContact[]> => {
-  return [];
+  try {
+    const res = await apiClient.get('/emergency-contacts');
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching emergency-contacts', error);
+    return [];
+  }
+};
+
+export const createEmergencyContacts = async (data: Partial<EmergencyContact>): Promise<EmergencyContact> => {
+  const res = await apiClient.post('/emergency-contacts', data);
+  return res.data;
+};
+
+export const updateEmergencyContacts = async (id: string, data: Partial<EmergencyContact>): Promise<EmergencyContact> => {
+  const res = await apiClient.put('/emergency-contacts/' + id, data);
+  return res.data;
+};
+
+export const deleteEmergencyContacts = async (id: string): Promise<void> => {
+  await apiClient.delete('/emergency-contacts/' + id);
 };

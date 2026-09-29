@@ -1,22 +1,53 @@
-// This represents the integration with grahub-api
+import { apiClient } from './client';
 
 export interface Resident {
   id: string;
   nik: string;
-  name: string;
-  gender: 'MALE' | 'FEMALE';
-  status: 'ACTIVE' | 'INACTIVE';
-  rt: string;
-  rw: string;
+  familyCardNumber: string;
+  fullName: string;
+  nickname?: string;
+  birthPlace: string;
+  birthDate: string;
+  occupation?: string;
+  education?: string;
+  nationality: string;
   phone?: string;
+  email?: string;
+  address: string;
+  photo?: string;
+  moveInDate?: string;
+  moveOutDate?: string;
+  moveOutReason?: string;
+  notes?: string;
+  userId?: string;
+  rtId: string;
+  rwId: string;
+  kelurahanId: string;
   familyId?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const fetchResidents = async (): Promise<Resident[]> => {
-  // Mocking the API response for now until backend is fully hooked up
-  return [
-    { id: '1', nik: '3273123456780001', name: 'Wissa Gamma', gender: 'MALE', status: 'ACTIVE', rt: '03', rw: '08', phone: '08123456789' },
-    { id: '2', nik: '3273123456780002', name: 'Ahmad Faisal', gender: 'MALE', status: 'ACTIVE', rt: '01', rw: '08' },
-    { id: '3', nik: '3273123456780003', name: 'Siti Nurhaliza', gender: 'FEMALE', status: 'INACTIVE', rt: '03', rw: '08', phone: '08987654321' },
-  ];
+  try {
+    const res = await apiClient.get('/residents');
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching residents', error);
+    return [];
+  }
+};
+
+export const createResidents = async (data: Partial<Resident>): Promise<Resident> => {
+  const res = await apiClient.post('/residents', data);
+  return res.data;
+};
+
+export const updateResidents = async (id: string, data: Partial<Resident>): Promise<Resident> => {
+  const res = await apiClient.put('/residents/' + id, data);
+  return res.data;
+};
+
+export const deleteResidents = async (id: string): Promise<void> => {
+  await apiClient.delete('/residents/' + id);
 };
